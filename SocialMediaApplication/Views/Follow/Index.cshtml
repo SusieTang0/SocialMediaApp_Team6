@@ -1,0 +1,20 @@
+﻿@model List<SocialMediaApplication.Models.Follow>
+
+
+<!-- this is a list sample of all the posts -->
+@if (Model != null)
+{
+    <div class="container row">
+        @foreach (var user in Model)
+        {
+
+            @Html.Partial("Components/ProfileCard", user)
+
+        }
+    </div>
+
+}
+else
+{
+    <p>No User available.</p>
+}

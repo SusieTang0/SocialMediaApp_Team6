@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SocialMediaApplication.Models.Post>
+
+
+@if (Model != null)
+{
+<div class="row">
+    <div class="col-md-12">
+        <h2>Welcome to Cross Square!</h2>
+           
+
+    </div>
+
+    <!-- this is a list sample for user's postlist -->
+    <div class="card w-100 p-4 my-2">
+
+        <!-- This is the title of the list-->
+        <div class="col-md-12">
+            <h5 style="color:#5897F5">Newest Post</h5>
+            <hr />
+        </div>
+
+        @Html.Partial("Components/Postlist", Model)
+
+        <!-- end of the cardS for one post -->
+        <a class="icon-link icon-link-hover" href="#">
+            See More Posts
+            <svg class="bi" aria-hidden="true">
+                <use xlink:href="#arrow-right"></use>
+            </svg>
+        </a>
+
+    </div>
+
+
+</div>
+}
+else
+{
+    <p>No data available.</p>
+}
+

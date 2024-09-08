@@ -1,0 +1,112 @@
+﻿@model SocialMediaApplication.Models.PostList
+
+@{
+    ViewData["Title"] = "User Page";
+    var thisUser = ViewBag.User as SocialMediaApplication.Models.User;
+    var thisOwner = ViewBag.Owner as SocialMediaApplication.Models.User;
+    var thisuserId = "";
+    var thisownerId = "";
+    if (thisUser != null && thisOwner != null)
+    {
+        thisuserId = thisUser.UserId;
+        thisownerId = thisOwner.UserId;
+       
+    }
+}
+
+@if (Model != null && thisUser != null && thisOwner != null)
+{
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-3 col-md-4">
+            <!-- User Profile Card -->
+            <div class="card px-2 py-3">
+         
+                <div class="card-img-top p-2 d-flex justify-content-center">
+                            <img src="@thisOwner?.ProfilePictureUrl" alt="Profile Picture" style="width:200px;border-radius:50%;" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">@thisOwner?.Name</h5>
+                    <p class="card-text">@thisOwner?.Bio</p>
+                </div>
+
+              
+                <!-- Links for the profile owner -->
+                <div class="card-body d-flex justify-content-center">
+                    <a href="/Account/Profile" class="btn btn-primary w-100" style="border-radius:10px;">Manage My Profile</a>
+                </div>
+                
+                <!-- Back to Homepage -->
+                <div class="col-md-12 d-flex justify-content-center mt-3"></div>
+
+                <!-- Follows and Followers Links -->
+                <div class="card-body row d-flex justify-content-center">
+                    <a asp-action="Index" asp-controller="Follow" asp-route-id="@thisownerId" asp-route-theType="followings" class="col-lg-5 m-1 w-45 text-center" style="text-decoration-line:none">Follows</a>
+                    <a asp-action="Index" asp-controller="Follow" asp-route-id="@thisownerId" asp-route-theType="followers" class="col-lg-5 m-1 w-45 text-center" style="text-decoration-line:none">Followers</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Lists Area -->
+        <div class="col-md-8">
+            <!-- Create New Post -->
+            <div class="card card-body">
+                <div class="row px-2">
+                    <div class="col-md-12">
+                        <h5 style="color:#5897F5">Create new Post</h5>
+                        <hr />
+                    </div>
+                    <form asp-action="CreatePost" method="post">
+                        <div class="row d-flex justify-content-center align-items-center py-2">
+                            <div class="col-md-1 justify-content-end">
+                                <img src="@thisOwner?.ProfilePictureUrl" alt="Profile Picture" style="width:50px;border-radius:50%;" />
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control border rounded-pill" type="text" name="content" placeholder="Post content" required />
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100 rounded-pill" type="submit">Post</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Posts by Followed -->
+            <div class="card w-100 p-4 my-2">
+                <div class="col-md-12">
+                    <h5 style="color:#5897F5">Posts by Followed</h5>
+                    <hr />
+                </div>
+                @Html.Partial("Components/Postlist", Model?.MyFollowedPosts)
+                <a class="icon-link icon-link-hover" href="#">
+                    See More Posts
+                    <svg class="bi" aria-hidden="true">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- My Posts -->
+            <div class="card w-100 p-4 my-2">
+                <div class="col-md-12">
+                    <h5 style="color:#5897F5">My Posts</h5>
+                    <hr />
+                </div>
+                @Html.Partial("Components/Postlist", Model?.MyPosts)
+                <a class="icon-link icon-link-hover" href="#">
+                    See More Posts
+                    <svg class="bi" aria-hidden="true">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+}
+else
+{
+    <p>No data available.</p>
+}
+

@@ -1,0 +1,122 @@
+﻿@model SocialMediaApplication.Models.PostList
+
+@{
+    ViewData["Title"] = "Other Page";
+    var thisUser = ViewBag.User as SocialMediaApplication.Models.User;
+    var thisOwner = ViewBag.Owner as SocialMediaApplication.Models.User;
+    HashSet<string> follows = ViewBag.Follows;
+    var isFollow = true;
+    var thisuserId = "";
+    var thisownerId = "";
+    if (thisUser != null && thisOwner != null)
+    {
+
+         thisuserId = thisUser.UserId;
+         thisownerId = thisOwner.UserId;
+
+        if (follows != null)
+        {
+            isFollow = follows.Contains(thisownerId);
+        }
+    }
+}
+
+@if (Model != null)
+{
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-3 col-md-4">
+            <!-- User's Profile Card -->
+            <div class="card px-2 py-3">
+                <div class="card-img-top p-2 d-flex justify-content-center">
+                    <img src="@thisOwner?.ProfilePictureUrl" alt="Profile Picture" style="width:200px;border-radius:50%;" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">@thisOwner?.Name</h5>
+                    <p class="card-text">@thisOwner?.Bio</p>
+                </div>
+
+                @if (thisownerId == null || thisuserId == null)
+                {
+                    <p>Error: authorId or thisuserId is null or empty</p>
+                }
+                else
+                {
+                    @if (isFollow != null)
+                    {
+                        if (isFollow)
+                        {
+                            <div class="card-body d-flex justify-content-center">
+                                <form asp-action="Unfollowing" method="post">
+                                    <input type="hidden" name="ownerId" id="followOwnerId" value="@thisownerId" />
+                                    <input type="hidden" name="userId" id="followUserId" value="@thisuserId" />
+                                    <button type="submit" class="btn btn-outline-danger w-100" style="border-radius:10px;">Unfollow -</button>
+                                </form>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Links for other users visiting the profile -->
+                            <div class="card-body d-flex justify-content-center">
+                                <form asp-action="Following" method="post">
+                                    <input type="hidden" name="ownerId" id="followOwnerId" value="@thisownerId" />
+                                    <input type="hidden" name="userId" id="followUserId" value="@thisuserId" />
+                                    <button type="submit" class="btn btn-info w-100" style="border-radius:10px;">Follow +</button>
+                                </form>
+
+
+                            </div>
+                        }
+                    }
+                
+                <!-- Follows and Followers Links -->
+                <div class="card-body row d-flex justify-content-center">
+                    <a asp-action="Index" asp-controller="Follow" asp-route-id="@thisownerId" asp-route-theType="followings" class="col-lg-5 m-1 w-45 text-center" style="text-decoration-line:none">Follows</a>
+                        <a asp-action="Index" asp-controller="Follow" asp-route-id="@thisownerId" asp-route-theType="followers" class="col-lg-5 m-1 w-45 text-center" style="text-decoration-line:none">Followers</a>
+                </div>
+                }
+
+            </div>
+           
+        </div>
+
+        <!-- Post Lists Area -->
+        <div class="col-md-8">
+            <!-- Posts by Followed -->
+            <div class="card w-100 p-4 my-2">
+                <div class="col-md-12">
+                    <h5 style="color:#5897F5">Posts by Followed</h5>
+                    <hr />
+                </div>
+                @Html.Partial("Components/Postlist", Model?.MyFollowedPosts)
+                <a class="icon-link icon-link-hover" href="#">
+                    See More Posts
+                    <svg class="bi" aria-hidden="true">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- My Posts -->
+            <div class="card w-100 p-4 my-2">
+                <div class="col-md-12">
+                    <h5 style="color:#5897F5">My Posts</h5>
+                    <hr />
+                </div>
+                @Html.Partial("Components/Postlist", Model?.MyPosts)
+                <a class="icon-link icon-link-hover" href="#">
+                    See More Posts
+                    <svg class="bi" aria-hidden="true">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No data available.</p>
+}
+

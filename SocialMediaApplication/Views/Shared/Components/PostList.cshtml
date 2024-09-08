@@ -1,0 +1,21 @@
+﻿@model List<SocialMediaApplication.Models.Post>
+
+<!-- this is a list sample of all the posts -->
+
+@if (Model != null)
+{
+    <div>
+        @foreach (var post in Model)
+        {
+            if (post != null)
+            {
+                @Html.Partial("Components/PostCard", post)
+            }
+        }
+    </div>
+    
+}
+else
+{
+    <p>No posts available.</p>
+}

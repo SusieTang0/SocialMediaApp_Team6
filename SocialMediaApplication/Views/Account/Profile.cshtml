@@ -1,0 +1,14 @@
+@model SocialMediaApplication.Models.User
+
+<div class="profile">
+    <h2>@Model.Name's Profile</h2>
+    @if (Model.ProfilePictureUrl != null)
+    {
+        <img src="@Model.ProfilePictureUrl" class="img-thumbnail" alt="Avatar"
+            style="width: 100px; height: 100px;" />
+    }
+    <p>@Model.Bio</p>
+    <a href="@Url.Action("EditProfile")" class="btn btn-primary" style="border-radius:10px;">Edit Profile</a>
+    <a class="btn btn-success" asp-controller="UserPage" asp-action="Index" style="border-radius:10px;">Back to HomePage</a>
+
+</div>

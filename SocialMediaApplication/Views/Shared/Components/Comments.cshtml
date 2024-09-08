@@ -1,0 +1,62 @@
+﻿@model SocialMediaApplication.Models.CommentViewModel
+
+@{
+    var thisUser = ViewBag.User as SocialMediaApplication.Models.User;
+    var thisOwner = ViewBag.Owner as SocialMediaApplication.Models.User;
+    string thisuserId = "";
+    string thisownerId = "";
+    if (thisUser != null && thisOwner != null)
+    {
+        thisuserId = thisUser.UserId;
+        thisownerId = thisOwner.UserId;
+       
+    }
+}
+
+
+<!-- this is the component to add comment-->
+<div class="card card-body">
+    <div class="text-center row px-2">
+        <form asp-action="AddComment" asp-controller="Comment" method="post">
+            <div class="row d-flex justify-content-between align-items-center py-2">
+                <div class="col-md-2 justify-content-center">
+                    <img src="@thisUser.ProfilePictureUrl" alt="Alternate Text" style="width:30px;border-radius:50%;" />
+                </div>
+                <div class="col-md-7">
+                    <input type="hidden" name="ownerId" id="ownerId" value="@thisownerId" />
+                    <input type="hidden" name="postId" id="postId" value="@Model.PostId" />
+                    <input class="form-control border rounded-pill" id="commentContent" type="text" name="commentContent"
+                           placeholder="Comment content" required/>
+                </div>
+                <div class="col-md-3 px-2">
+                    <button class="btn btn-primary w-100 rounded-pill"
+                            type="submit">
+                        Post
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card card-body">
+
+    @if(Model.Comments != null)
+    {
+        @foreach(var kvp in Model.Comments)
+        {
+            var commentId = kvp.Key;
+            var comment = kvp.Value;
+            @Html.Partial("Components/CommentCard", Tuple.Create(commentId, comment))
+        }
+    }
+    else
+    {
+        <p>No comments available.</p>
+    }
+
+</div>
+   
+
+
+
+

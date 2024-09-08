@@ -1,0 +1,13 @@
+@model List<dynamic>
+
+    <div>
+        <h3>Comments</h3>
+        <ul>
+            @foreach (var comment in Model)
+            {
+                <li>
+                    @comment.UserId: @comment.Content
+                </li>
+            }
+        </ul>
+    </div>                                                                                                                                                             

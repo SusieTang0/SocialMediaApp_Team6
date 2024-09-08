@@ -1,0 +1,111 @@
+@model SocialMediaApplication.Models.Follow
+
+@{
+    var thisUser = ViewBag.User as SocialMediaApplication.Models.User?? null;
+    var thisOwner = ViewBag.Owner as SocialMediaApplication.Models.User ?? null;
+    HashSet<string> follows = ViewBag.Follows;
+    var isOwner = ViewBag.IsOwner;
+    var isFollow = true;
+    var thisfollowUser = "";
+    var thisuserId = "";
+    var thisownerId = "";
+    if (thisUser != null && thisOwner != null &&  Model != null)
+    {
+        thisfollowUser = Model.UserId;
+        thisuserId = thisUser.UserId;
+        thisownerId = thisOwner.UserId;
+
+        if (follows != null && !String.IsNullOrEmpty(thisuserId))
+        {
+            isFollow = follows.Contains(thisfollowUser);
+        }
+    }
+}
+
+
+@if (Model != null)
+{
+    
+ <!-- Profile Card -->
+<div class="col-lg-3 col-md-4">
+    <!-- User's Profile Card -->
+    <div class="card px-1 py-2">
+        <div class="card-img-top pt-2 d-flex justify-content-center align-items-center" style="height:180px;">
+            @if (thisfollowUser != null && thisuserId != null)
+            {
+                @if (thisfollowUser != thisuserId)
+                {
+                     <a asp-action="Index" asp-controller="OtherPages" asp-route-id="@thisfollowUser">
+                            <img src="@Model?.UserAvatar" alt="Avatar" style="width:180px;border-radius:50%;" />
+                        
+                    </a>
+                }
+                else
+                {
+                      <a asp-action="Index" asp-controller="UserPage" asp-route-id="@thisfollowUser">
+                            <img src="@Model?.UserAvatar" alt="Avatar" style="width:180px;border-radius:50%;" />
+                    </a>
+                }
+            }
+            else
+            {
+                <p>No follows available.</p>
+            }
+
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center" style="color:cornflowerblue; height:40px">
+            <h5 class="card-title text-center pt-2">@Model?.UserName</h5>
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center" style="height:60px">
+            <p class="card-text">@Model?.UserBio</p>
+        </div>
+        <div class="card-body d-flex justify-content-center">
+                @if (thisfollowUser == null || thisuserId == null || thisownerId == null)
+            {
+                <p>Error: authorId or thisuserId is null or empty</p>
+            }
+            else
+            {
+                if (thisfollowUser == thisuserId)
+                {
+                    <a asp-action="Index" asp-controller="UserPage" asp-route-id="@thisuserId" class="btn btn-outline-success w-100" style="border-radius:10px;">To My HomePage</a>
+                }
+                else
+                {
+                    <p>Debug:thisfollowUser = @thisfollowUser / thisuserId = @thisuserId</p>
+                    if (isFollow)
+                    {
+
+                        <form asp-action="Unfollowing" method="post">
+                                <input type="hidden" name="ownerId" value="@thisownerId" />
+                             <input type="hidden" name="userId" value="@thisuserId" />
+                            <input type="hidden" name="followedUserId" value="@thisfollowUser" />
+                            <button type="submit" class="btn btn-outline-danger w-100" style="border-radius:10px;">Unfollow -</button>
+                            </form>
+                        
+                    }       
+                    else
+                    {
+                        
+                            <!-- Links for other users visiting the profile -->
+                            <form asp-action="Following" method="post">
+                                <input type="hidden" name="ownerId" value="@thisownerId" />
+                                 <input type="hidden" name="userId" value="@thisuserId" />
+                              
+                                <input type="hidden" name="followedUserId" value="@thisfollowUser" />
+                            <button type="submit" class="btn btn-info w-100" style="border-radius:10px;">Follow +</button>
+                        </form>
+                       
+                    }
+                }
+            } 
+               
+         
+        </div>
+    </div>
+</div>
+}
+else
+{
+    <p>No follows available.</p>
+}
